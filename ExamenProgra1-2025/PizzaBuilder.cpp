@@ -1,5 +1,6 @@
 ﻿#include "PizzaBuilder.h"
 #include <iostream>
+#include "CheeseRepository.h"
 
 PizzaBuilder::PizzaBuilder() {
 }
@@ -9,18 +10,15 @@ void PizzaBuilder::BuildPizza() {
     std::cout << "Let's build your pizza!" << std::endl;
 
     SelectTomatoes();
-
-    // TODO
-    //SelectCheese();
-    //SelectHerbs();
-    //SelectMeats();
+    SelectCheese();
 }
 
 void PizzaBuilder::DisplayFinalPizza() const {
     std::cout << "\n=== Your Pizza ===" << std::endl;
     if (selectedIngredients_.empty()) {
         std::cout << "No ingredients selected." << std::endl;
-    } else {
+    }
+    else {
         std::cout << "Your pizza contains:" << std::endl;
         for (const auto& ingredient : selectedIngredients_) {
             std::cout << "- " << ingredient << std::endl;
@@ -29,10 +27,8 @@ void PizzaBuilder::DisplayFinalPizza() const {
 }
 
 void PizzaBuilder::SelectTomatoes() {
-
     std::cout << "\n--- Selecting Tomatoes ---" << std::endl;
 
-    // TODO: Reusar esta linea, pero con su propio Repositorio.
     IngredientSelector<TomatoesRepository> selector(tomatoRepo_, availableTomatoes_, "tomato");
 
     while (true) {
@@ -49,6 +45,48 @@ void PizzaBuilder::SelectTomatoes() {
         selector.AddIngredientToPizza(userChoice, selectedIngredients_);
     }
 }
+
+void PizzaBuilder::SelectCheese() {
+    std::cout << "\n--- Selecting Cheese ---" << std::endl;
+
+    CheeseRepository cheeseRepo;
+    IngredientSelector<CheeseRepository> selector(cheeseRepo, availableCheeses_, "cheese");
+
+    while (true) {
+        selector.DisplayAvailableIngredients();
+
+        std::cout << "\nEnter cheese type (or 'done' to finish): ";
+        std::string userChoice;
+        std::getline(std::cin, userChoice);
+
+        if (userChoice == "done" || userChoice == "DONE") {
+            break;
+        }
+
+        selector.AddIngredientToPizza(userChoice, selectedIngredients_);
+    }
+}
+void PizzaBuilder::SelectMeats() {
+    std::cout << "\n--- Selecting Meats ---" << std::endl;
+
+    IngredientSelector<MeatsRepository> selector(MeatsRepo_, availableMeats_, "tomato");
+
+    while (true) {
+        selector.DisplayAvailableIngredients();
+
+        std::cout << "\nEnter meats type (or 'done' to finish): ";
+        std::string userChoice;
+        std::getline(std::cin, userChoice);
+
+        if (userChoice == "done" || userChoice == "DONE") {
+            break;
+        }
+
+        selector.AddIngredientToPizza(userChoice, selectedIngredients_);
+    }
+}
+
+
 
 // TODO:  Crear cada uno su parte. ☝️ toma el ejemplo de  SelectTomatoes y crea tu propia implementación.
 
